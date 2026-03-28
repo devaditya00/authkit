@@ -1,11 +1,11 @@
 const transporter = require("../config/email");
 const ApiError = require("../utils/ApiError");
 
-//  Base mail sender 
+// ── Base mail sender ─────────────────────────────────────────────────────────
 const sendMail = async ({ to, subject, html }) => {
   try {
     await transporter.sendMail({
-      from: `"AuthKit" <${process.env.EMAIL_FROM}>`,
+      from: "AuthKit <onboarding@resend.dev>",
       to,
       subject,
       html,
@@ -16,7 +16,7 @@ const sendMail = async ({ to, subject, html }) => {
   }
 };
 
-//Email verification 
+// ── Email verification ───────────────────────────────────────────────────────
 const sendVerificationEmail = async (user, rawToken) => {
   const verifyUrl = `${process.env.CLIENT_URL}/verify-email?token=${rawToken}`;
 
@@ -43,7 +43,7 @@ const sendVerificationEmail = async (user, rawToken) => {
   });
 };
 
-// Password reset
+// ── Password reset ───────────────────────────────────────────────────────────
 const sendPasswordResetEmail = async (user, rawToken) => {
   const resetUrl = `${process.env.CLIENT_URL}/reset-password?token=${rawToken}`;
 
@@ -70,11 +70,11 @@ const sendPasswordResetEmail = async (user, rawToken) => {
   });
 };
 
-// Welcome email (sent after verification)
+// ── Welcome email ────────────────────────────────────────────────────────────
 const sendWelcomeEmail = async (user) => {
   const html = `
     <div style="font-family:sans-serif;max-width:480px;margin:auto;padding:32px;border:1px solid #e5e7eb;border-radius:12px;">
-      <h2 style="color:#111827;margin-bottom:8px;">Welcome to AuthKit </h2>
+      <h2 style="color:#111827;margin-bottom:8px;">Welcome to AuthKit!</h2>
       <p style="color:#6b7280;margin-bottom:24px;">Hi ${user.name}, your email has been verified. You're all set!</p>
       <p style="color:#d1d5db;font-size:12px;margin-top:32px;">If you have any questions, just reply to this email.</p>
     </div>
