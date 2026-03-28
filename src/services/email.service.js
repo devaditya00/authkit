@@ -6,7 +6,7 @@ const sendMail = async ({ to, subject, html }) => {
   try {
     const { error } = await resend.emails.send({
       from: "AuthKit <onboarding@resend.dev>",
-      to,
+      to:"adityamishra76731@gmail.com",
       subject,
       html,
     });
