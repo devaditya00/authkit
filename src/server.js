@@ -9,6 +9,9 @@ const errorHandler = require("./middlewares/errorHandler");
 
 const app = express();
 
+//trust railway proxy
+app.set("trust proxy", 1);
+
 // ── Security headers ──────────────────────────────────────────────────────────
 app.use(helmet());
 
