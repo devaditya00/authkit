@@ -1,22 +1,27 @@
-const transporter = require("../config/email");
+const resend = require("../config/email");
 const ApiError = require("../utils/ApiError");
 
-// ── Base mail sender ─────────────────────────────────────────────────────────
+// ── Base mail sender ──────────────────────────────────────────────────────────
 const sendMail = async ({ to, subject, html }) => {
   try {
-    await transporter.sendMail({
+    const { error } = await resend.emails.send({
       from: "AuthKit <onboarding@resend.dev>",
       to,
       subject,
       html,
     });
+
+    if (error) {
+      console.error("Email send failed:", error.message);
+      throw new ApiError(500, "Failed to send email. Please try again later");
+    }
   } catch (err) {
     console.error("Email send failed:", err.message);
     throw new ApiError(500, "Failed to send email. Please try again later");
   }
 };
 
-// ── Email verification ───────────────────────────────────────────────────────
+// ── Email verification ────────────────────────────────────────────────────────
 const sendVerificationEmail = async (user, rawToken) => {
   const verifyUrl = `${process.env.CLIENT_URL}/verify-email?token=${rawToken}`;
 
@@ -43,7 +48,7 @@ const sendVerificationEmail = async (user, rawToken) => {
   });
 };
 
-// ── Password reset ───────────────────────────────────────────────────────────
+// ── Password reset ────────────────────────────────────────────────────────────
 const sendPasswordResetEmail = async (user, rawToken) => {
   const resetUrl = `${process.env.CLIENT_URL}/reset-password?token=${rawToken}`;
 
@@ -59,7 +64,7 @@ const sendPasswordResetEmail = async (user, rawToken) => {
         Or copy this link:<br/>
         <span style="color:#6b7280;word-break:break-all;">${resetUrl}</span>
       </p>
-      <p style="color:#d1d5db;font-size:12px;margin-top:32px;">If you didn't request a password reset, you can safely ignore this email. Your password won't change.</p>
+      <p style="color:#d1d5db;font-size:12px;margin-top:32px;">If you didn't request a password reset, you can safely ignore this email.</p>
     </div>
   `;
 
@@ -70,7 +75,7 @@ const sendPasswordResetEmail = async (user, rawToken) => {
   });
 };
 
-// ── Welcome email ────────────────────────────────────────────────────────────
+// ── Welcome email ─────────────────────────────────────────────────────────────
 const sendWelcomeEmail = async (user) => {
   const html = `
     <div style="font-family:sans-serif;max-width:480px;margin:auto;padding:32px;border:1px solid #e5e7eb;border-radius:12px;">

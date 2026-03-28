@@ -1,24 +1,5 @@
-const nodemailer = require("nodemailer");
+const { Resend } = require("resend");
 
-const transporter = nodemailer.createTransport({
-  host: "smtp.resend.com",
-  port: 465,
-  secure: true,
-  auth: {
-    user: "resend",
-    pass: process.env.RESEND_API_KEY,
-  },
-});
+const resend = new Resend(process.env.RESEND_API_KEY);
 
-const verifyEmailConnection = async () => {
-  try {
-    await transporter.verify();
-    console.log("Email transporter ready");
-  } catch (err) {
-    console.warn("Email transporter failed:", err.message);
-  }
-};
-
-verifyEmailConnection();
-
-module.exports = transporter;
+module.exports = resend;
